@@ -20,8 +20,8 @@ $ go build
 $ ./monkey
 Hello USERNAME! This is the Monkey programming language!
 Feel free to type in commands
->> 1 = 1;
-{Literal:1 Type:INT}
+>> i = 1;
+{Literal:i Type:IDENT}
 {Literal:= Type:=}
 {Literal:1 Type:INT}
 {Literal:; Type:;}
