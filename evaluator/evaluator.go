@@ -16,7 +16,7 @@ var (
 func Eval(node ast.Node, env *object.Environment) object.Object {
 	switch node := node.(type) {
 	case *ast.Program:
-		return evalProgram(node.Statements, env)
+		return evalProgram(node, env)
 
 	case *ast.ExpressionStatement:
 		return Eval(node.Expression, env)
@@ -39,10 +39,12 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		if isError(left) {
 			return left
 		}
+
 		right := Eval(node.Right, env)
 		if isError(right) {
 			return right
 		}
+
 		return evalInfixExpression(node.Operator, left, right)
 
 	case *ast.BlockStatement:
@@ -78,6 +80,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		if isError(function) {
 			return function
 		}
+
 		args := evalExpressions(node.Arguments, env)
 		if len(args) == 1 && isError(args[0]) {
 			return args[0]
@@ -115,9 +118,10 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 func applyFunction(fn object.Object, args []object.Object) object.Object {
 	switch fn := fn.(type) {
+
 	case *object.Function:
-		exendedEnv := extendFunctionEnv(fn, args)
-		evaluated := Eval(fn.Body, exendedEnv)
+		extendedEnv := extendFunctionEnv(fn, args)
+		evaluated := Eval(fn.Body, extendedEnv)
 		return unwrapReturnValue(evaluated)
 
 	case *object.Builtin:
@@ -229,7 +233,6 @@ func evalHashLiteral(node *ast.HashLiteral, env *object.Environment) object.Obje
 func evalIdentifier(node *ast.Identifier, env *object.Environment) object.Object {
 	if val, ok := env.Get(node.Value); ok {
 		return val
-
 	}
 
 	if builtin, ok := builtins[node.Value]; ok {
@@ -324,14 +327,14 @@ func evalPrefixExpression(operator string, right object.Object) object.Object {
 	case "-":
 		return evalMinusPrefixOperatorExpression(right)
 	default:
-		return newError("unknown operator: %s%s", operator, right)
+		return newError("unknown operator: %s%s", operator, right.Type())
 	}
 }
 
-func evalProgram(stmts []ast.Statement, env *object.Environment) object.Object {
+func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 	var result object.Object
 
-	for _, statement := range stmts {
+	for _, statement := range program.Statements {
 		result = Eval(statement, env)
 
 		switch result := result.(type) {
@@ -349,6 +352,7 @@ func evalStringInfixExpression(operator string, left, right object.Object) objec
 	if operator != "+" {
 		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
 	}
+
 	leftVal := left.(*object.String).Value
 	rightVal := right.(*object.String).Value
 	return &object.String{Value: leftVal + rightVal}
@@ -399,5 +403,6 @@ func unwrapReturnValue(obj object.Object) object.Object {
 	if returnValue, ok := obj.(*object.ReturnValue); ok {
 		return returnValue.Value
 	}
+
 	return obj
 }

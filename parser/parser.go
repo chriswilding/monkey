@@ -27,7 +27,6 @@ type (
 )
 
 var precedences = map[token.TokenType]int{
-	token.LPAREN:   CALL,
 	token.EQ:       EQUALS,
 	token.NOT_EQ:   EQUALS,
 	token.LT:       LESSGREATER,
@@ -36,6 +35,7 @@ var precedences = map[token.TokenType]int{
 	token.MINUS:    SUM,
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
+	token.LPAREN:   CALL,
 	token.LBRACKET: INDEX,
 }
 
