@@ -13,10 +13,12 @@ const (
 	COMMA     = ","
 	SEMICOLON = ";"
 
-	LBRACE = "{"
-	RBRACE = "}"
-	LPAREN = "("
-	RPAREN = ")"
+	LBRACE   = "{"
+	RBRACE   = "}"
+	LPAREN   = "("
+	RPAREN   = ")"
+	LBRACKET = "["
+	RBRACKET = "]"
 
 	// Keywords
 	FUNCTION = "FUNCTION"
