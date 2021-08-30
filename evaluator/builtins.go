@@ -1,6 +1,10 @@
 package evaluator
 
-import "github.com/ChrisWilding/monkey/object"
+import (
+	"fmt"
+
+	"github.com/ChrisWilding/monkey/object"
+)
 
 var builtins = map[string]*object.Builtin{
 	"first": {
@@ -11,10 +15,12 @@ var builtins = map[string]*object.Builtin{
 			if args[0].Type() != object.ARRAY_OBJ {
 				return newError("argument to `first` must be ARRAY, got %s", args[0].Type())
 			}
+
 			arr := args[0].(*object.Array)
 			if len(arr.Elements) > 0 {
 				return arr.Elements[0]
 			}
+
 			return NULL
 		},
 	},
@@ -33,6 +39,7 @@ var builtins = map[string]*object.Builtin{
 			if length > 0 {
 				return arr.Elements[length-1]
 			}
+
 			return NULL
 		},
 	},
@@ -72,6 +79,15 @@ var builtins = map[string]*object.Builtin{
 			return &object.Array{Elements: newElements}
 		},
 	},
+	"puts": {
+		Fn: func(args ...object.Object) object.Object {
+			for _, arg := range args {
+				fmt.Println(arg.Inspect())
+			}
+
+			return NULL
+		},
+	},
 	"rest": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
@@ -88,6 +104,7 @@ var builtins = map[string]*object.Builtin{
 				copy(newElements, arr.Elements[1:length])
 				return &object.Array{Elements: newElements}
 			}
+
 			return NULL
 		},
 	},

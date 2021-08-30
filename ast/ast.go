@@ -42,8 +42,6 @@ func (rs *ReturnStatement) String() string {
 
 	out.WriteString(rs.TokenLiteral() + " ")
 
-	out.WriteString(" = ")
-
 	if rs.ReturnValue != nil {
 		out.WriteString(rs.ReturnValue.String())
 	}
@@ -220,6 +218,7 @@ func (fl *FunctionLiteral) String() string {
 
 	return out.String()
 }
+
 func (fl *FunctionLiteral) TokenLiteral() string { return fl.Token.Literal }
 func (fl *FunctionLiteral) expressionNode()      {}
 
@@ -229,8 +228,6 @@ type CallExpression struct {
 	Arguments []Expression
 }
 
-func (ce *CallExpression) expressionNode()      {}
-func (ce *CallExpression) TokenLiteral() string { return ce.Token.Literal }
 func (ce *CallExpression) String() string {
 	var out bytes.Buffer
 
@@ -246,6 +243,9 @@ func (ce *CallExpression) String() string {
 
 	return out.String()
 }
+
+func (ce *CallExpression) TokenLiteral() string { return ce.Token.Literal }
+func (ce *CallExpression) expressionNode()      {}
 
 type StringLiteral struct {
 	Token token.Token
@@ -276,11 +276,8 @@ func (al *ArrayLiteral) String() string {
 	return out.String()
 }
 
-func (al *ArrayLiteral) TokenLiteral() string {
-	return al.Token.Literal
-}
-
-func (al *ArrayLiteral) expressionNode() {}
+func (al *ArrayLiteral) TokenLiteral() string { return al.Token.Literal }
+func (al *ArrayLiteral) expressionNode()      {}
 
 type IndexExpression struct {
 	Token token.Token
@@ -301,8 +298,7 @@ func (ie *IndexExpression) String() string {
 }
 
 func (ie *IndexExpression) TokenLiteral() string { return ie.Token.Literal }
-
-func (ie *IndexExpression) expressionNode() {}
+func (ie *IndexExpression) expressionNode()      {}
 
 type Program struct {
 	Statements []Statement
@@ -325,3 +321,26 @@ func (p *Program) TokenLiteral() string {
 		return ""
 	}
 }
+
+type HashLiteral struct {
+	Token token.Token // the '{' token
+	Pairs map[Expression]Expression
+}
+
+func (hl *HashLiteral) String() string {
+	var out bytes.Buffer
+
+	pairs := []string{}
+	for key, value := range hl.Pairs {
+		pairs = append(pairs, key.String()+":"+value.String())
+	}
+
+	out.WriteString("{")
+	out.WriteString(strings.Join(pairs, ", "))
+	out.WriteString("}")
+
+	return out.String()
+}
+
+func (hl *HashLiteral) TokenLiteral() string { return hl.Token.Literal }
+func (hl *HashLiteral) expressionNode()      {}

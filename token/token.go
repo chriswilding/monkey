@@ -12,6 +12,7 @@ const (
 	// Delimiters
 	COMMA     = ","
 	SEMICOLON = ";"
+	COLON     = ":"
 
 	LBRACE   = "{"
 	RBRACE   = "}"
