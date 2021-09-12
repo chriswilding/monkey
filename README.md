@@ -12,7 +12,7 @@ My implementation of [A Macro System For Monkey](https://interpreterbook.com/los
 
 ## Prerequisites
 
-1. [Go 1.16](https://golang.org/doc/install)
+1. [Go 1.17](https://golang.org/doc/install)
 
 ## Build
 
