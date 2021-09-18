@@ -26,19 +26,15 @@ type VM struct {
 	sp           int // Always points to the next value. Top of stack is stack[sp-1]
 }
 
+func (vm *VM) LastPoppedStackElem() object.Object {
+	return vm.stack[vm.sp]
+}
+
 func (vm *VM) Run() error {
 	for ip := 0; ip < len(vm.instructions); ip++ {
 		op := code.Opcode(vm.instructions[ip])
 
 		switch op {
-		case code.OpConstant:
-			constIndex := code.ReadUint16(vm.instructions[ip+1:])
-			ip += 2
-			err := vm.push(vm.constants[constIndex])
-			if err != nil {
-				return err
-			}
-
 		case code.OpAdd:
 			right := vm.pop()
 			left := vm.pop()
@@ -47,6 +43,17 @@ func (vm *VM) Run() error {
 
 			result := leftValue + rightValue
 			vm.push(&object.Integer{Value: result})
+
+		case code.OpConstant:
+			constIndex := code.ReadUint16(vm.instructions[ip+1:])
+			ip += 2
+			err := vm.push(vm.constants[constIndex])
+			if err != nil {
+				return err
+			}
+
+		case code.OpPop:
+			vm.pop()
 		}
 	}
 	return nil
