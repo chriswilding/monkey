@@ -54,6 +54,7 @@ func (ao *Array) Type() ObjectType { return ARRAY_OBJ }
 
 type CompiledFunction struct {
 	Instructions code.Instructions
+	NumLocals    int
 }
 
 func (cf *CompiledFunction) Inspect() string {
