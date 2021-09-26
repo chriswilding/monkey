@@ -53,8 +53,9 @@ func (ao *Array) Inspect() string {
 func (ao *Array) Type() ObjectType { return ARRAY_OBJ }
 
 type CompiledFunction struct {
-	Instructions code.Instructions
-	NumLocals    int
+	Instructions  code.Instructions
+	NumLocals     int
+	NumParameters int
 }
 
 func (cf *CompiledFunction) Inspect() string {
